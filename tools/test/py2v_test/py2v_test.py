@@ -1,0 +1,88 @@
+import sys
+import os
+
+pkg_home = os.getenv("HPAO_BASE_PATH")
+sys.path.append(pkg_home + "/my_ic_ecology/tools")
+
+from hpao_py2v import Signal,Block,Connect,Connecter,HDLmodule,ModuleHeader,ModuleInster
+
+top_data_in_para_signal = Signal("DATA_IN",width="0",kind="parameter",default="256")
+top_clk_signal = Signal("clk",width="0",kind="input")
+top_rst_signal = Signal("rst",width="0",kind="input")
+top_a1_signal = Signal("a1",width="DATA_IN",kind="input")
+top_b1_signal = Signal("b1",width="DATA_IN",kind="input")
+top_c1_signal = Signal("c1",width="DATA_IN",kind="input")
+top_d1_signal = Signal("d1",width="DATA_IN",kind="output")
+
+top_header = ModuleHeader("top")
+top_header.add_param(top_data_in_para_signal)
+top_header.add_signal(top_clk_signal)
+top_header.add_signal(top_rst_signal)
+top_header.add_signal(top_a1_signal)
+top_header.add_signal(top_b1_signal)
+top_header.add_signal(top_c1_signal)
+top_header.add_signal(top_d1_signal)
+top_hdl = HDLmodule("top","./rtl/top.v",header = top_header)
+
+add_a_signal = Signal("a",width="DATA_IN",kind="input")
+add_b_signal = Signal("b",width="DATA_IN",kind="input")
+add_c_signal = Signal("c",width="DATA_IN",kind="output")
+
+add_alw_a_signal = Signal("a",width="DATA_IN",kind="wire")
+add_alw_b_signal = Signal("b",width="DATA_IN",kind="wire")
+add_alw_c_signal = Signal("c",width="DATA_IN",kind="reg")
+
+add_header = ModuleHeader("add")
+add_header.add_param(top_data_in_para_signal)
+add_header.add_signal(top_clk_signal)
+add_header.add_signal(top_rst_signal)
+add_header.add_signal(add_a_signal)
+add_header.add_signal(add_b_signal)
+add_header.add_signal(add_c_signal)
+add_hdl = HDLmodule("add","./rtl/add.v",header = add_header)
+add_block = Block("add","alr")
+add_block.signals.append(add_alw_a_signal)
+add_block.signals.append(add_alw_b_signal)
+add_block.signals.append(add_alw_c_signal)
+add_block.texts.append("always@(posedge " + top_clk_signal.name + " or negedge " + top_rst_signal.name + ")")
+add_block.texts.append("if(!" + top_rst_signal.name + ")")
+add_block.texts.append("    " + add_alw_c_signal.name + " <= {" + add_alw_c_signal.width + "{1'b0}};")
+add_block.texts.append("else")
+add_block.texts.append("    " + add_alw_c_signal.name + " <= " + add_alw_a_signal.name + " + " + add_alw_b_signal.name + ";")
+add_hdl.blocks.append(add_block)
+add_hdl.write_v()
+
+add_inst00 = ModuleInster("add_inst00",add_hdl)
+add_inst01 = ModuleInster("add_inst01",add_hdl)
+
+connect_data_in_para = Connecter("DATA_IN")
+connect_data_in_para.add_param(add_inst00,top_data_in_para_signal)
+connect_data_in_para.add_param(add_inst01,top_data_in_para_signal)
+connect_clk = Connecter("clk")
+connect_clk.add_signal(add_inst00,top_clk_signal)
+connect_clk.add_signal(add_inst01,top_clk_signal)
+connect_rst = Connecter("rst")
+connect_rst.add_signal(add_inst00,top_rst_signal)
+connect_rst.add_signal(add_inst01,top_rst_signal)
+connect_a1 = Connecter("a1")
+connect_a1.add_signal(add_inst00,add_a_signal)
+connect_b1 = Connecter("b1")
+connect_b1.add_signal(add_inst00,add_b_signal)
+connect_c1 = Connecter("c1")
+connect_c1.add_signal(add_inst00,add_c_signal)
+connect_c1.add_signal(add_inst01,add_a_signal)
+connect_b2 = Connecter("b2")
+connect_b2.add_signal(add_inst01,add_b_signal)
+connect_c2 = Connecter("c2")
+connect_c2.add_signal(add_inst01,add_c_signal)
+
+top_ass_d1_signal = Signal("d1",width="DATA_IN",kind="wire")
+top_assign_block = Block("ass","as")
+top_assign_block.signals.append(top_ass_d1_signal)
+top_assign_block.texts.append("assign " + top_ass_d1_signal.name + " = " + connect_c2.name);
+top_hdl.blocks.append(top_assign_block)
+
+top_hdl.moduleinsters.append(add_inst00)
+top_hdl.moduleinsters.append(add_inst01)
+
+top_hdl.write_v()
