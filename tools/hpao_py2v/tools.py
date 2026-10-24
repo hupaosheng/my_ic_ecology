@@ -56,8 +56,7 @@ class HDLmodule:
                 print(signal.name + signal.kind)
                 signal_mergemark(signal,self.header.signals,self.signals)
         for connecter in self.connecters:
-            for signal in connecter.signals:
-                signal_mergemark(signal,self.header.signals,self.signals)
+            signal_mergemark(Signal(connecter.name,width = connecter.connects[0].signal.width,kind = "wire"),self.header.signals,self.signals)
 
     def write_v(self):
         self.update()
@@ -86,9 +85,10 @@ class HDLmodule:
             f.write(");\n\n")
             for signal in self.signals:
                 if(signal.width == "0"):
-                    f.write(signal.kind + " " + signal.name + ";" + "\n")
+                    f.write("    " + signal.kind + " " + signal.name + ";" + "\n")
                 else:
-                    f.write(signal.kind + " " + "[" + signal.width + ":0] " + signal.name + ";" + "\n")
+                    f.write("    " + signal.kind + " " + "[" + signal.width + ":0] " + signal.name + ";" + "\n")
+            f.write("\n")
             for block in self.blocks:
                 for text in block.texts:
                     f.write("    " + text + "\n")
@@ -97,7 +97,7 @@ class HDLmodule:
                 if(moduleinster.hdlmodule.header.headparams):
                     f.write("    " + moduleinster.hdlmodule.header.name + " #( " + "\n")
                     for i,connecter in enumerate(moduleinster.paraconnecters):
-                        if(i == len(moduleinster.connecters) -1):
+                        if(i == len(moduleinster.paraconnecters) -1):
                             for connect in connecter.connects:
                                 if(connect.moduleinster is moduleinster):
                                     f.write("    " + "    " + "." + connect.signal.name + "(" + connecter.name + ")" +"\n")

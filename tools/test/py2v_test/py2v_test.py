@@ -76,10 +76,18 @@ connect_b2.add_signal(add_inst01,add_b_signal)
 connect_c2 = Connecter("c2")
 connect_c2.add_signal(add_inst01,add_c_signal)
 
+top_hdl.connecters.append(connect_clk)
+top_hdl.connecters.append(connect_rst)
+top_hdl.connecters.append(connect_a1)
+top_hdl.connecters.append(connect_b1)
+top_hdl.connecters.append(connect_c1)
+top_hdl.connecters.append(connect_b2)
+top_hdl.connecters.append(connect_c2)
+
 top_ass_d1_signal = Signal("d1",width="DATA_IN",kind="wire")
 top_assign_block = Block("ass","as")
 top_assign_block.signals.append(top_ass_d1_signal)
-top_assign_block.texts.append("assign " + top_ass_d1_signal.name + " = " + connect_c2.name);
+top_assign_block.texts.append("assign " + top_ass_d1_signal.name + " = " + connect_c2.name + ";");
 top_hdl.blocks.append(top_assign_block)
 
 top_hdl.moduleinsters.append(add_inst00)

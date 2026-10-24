@@ -9,10 +9,13 @@ module top#(
     output [DATA_IN:0] d1
 );
 
-    assign d1 = c2
+    wire [DATA_IN:0] b2;
+    wire [DATA_IN:0] c2;
+
+    assign d1 = c2;
 
     add #( 
-        .DATA_IN(DATA_IN),
+        .DATA_IN(DATA_IN)
     ) add_inst00 (
         .clk(clk),
         .rst(rst),
@@ -22,7 +25,7 @@ module top#(
     );
 
     add #( 
-        .DATA_IN(DATA_IN),
+        .DATA_IN(DATA_IN)
     ) add_inst01 (
         .clk(clk),
         .rst(rst),

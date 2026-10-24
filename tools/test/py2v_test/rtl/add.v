@@ -8,6 +8,7 @@ module add#(
     output reg [DATA_IN:0] c
 );
 
+
     always@(posedge clk or negedge rst)
     if(!rst)
         c <= {DATA_IN{1'b0}};
