@@ -1,4 +1,4 @@
-module add#(
+module add #(
     parameter DATA_IN=256
 )(
     input clk,

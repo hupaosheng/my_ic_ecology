@@ -1,4 +1,4 @@
-module top#(
+module top #(
     parameter DATA_IN=256
 )(
     input clk,

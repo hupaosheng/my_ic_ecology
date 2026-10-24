@@ -62,7 +62,7 @@ class HDLmodule:
         self.update()
         with open(self.path, 'w', encoding='utf-8') as f:
             if(self.header.headparams):
-                f.write("module " + self.header.name + "#(" + "\n")
+                f.write("module " + self.header.name + " #(" + "\n")
                 for i,para in  enumerate(self.header.headparams):
                     if i == len(self.header.headparams) -1 :
                         f.write("    parameter " + para.name + "=" + para.default +"\n")
@@ -70,7 +70,7 @@ class HDLmodule:
                         f.write("    parameter " + para.name + "=" + para.default + "," +"\n")
                 f.write(")("+"\n")
             else:
-                f.write("module " + self.header.name + "(" + "\n")
+                f.write("module " + self.header.name + " (" + "\n")
             for i,signal in  enumerate(self.header.signals):
                 if(i == len(self.header.signals) -1):
                     if(signal.width == "0"):
