@@ -3,14 +3,14 @@ module top #(
 )(
     input clk,
     input rst,
-    input [DATA_IN:0] a1,
-    input [DATA_IN:0] b1,
-    input [DATA_IN:0] c1,
-    output [DATA_IN:0] d1
+    input [DATA_IN-1:0] a1,
+    input [DATA_IN-1:0] b1,
+    input [DATA_IN-1:0] c1,
+    output [DATA_IN-1:0] d1
 );
 
-    wire [DATA_IN:0] b2;
-    wire [DATA_IN:0] c2;
+    wire [DATA_IN-1:0] b2;
+    wire [DATA_IN-1:0] c2;
 
     assign d1 = c2;
 
@@ -21,7 +21,7 @@ module top #(
         .rst(rst),
         .a(a1),
         .b(b1),
-        .c(c1)
+        .c(b2)
     );
 
     add #( 
@@ -29,8 +29,8 @@ module top #(
     ) add_inst01 (
         .clk(clk),
         .rst(rst),
-        .a(c1),
-        .b(b2),
+        .a(b2),
+        .b(c1),
         .c(c2)
     );
 

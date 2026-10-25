@@ -3,9 +3,9 @@ module add #(
 )(
     input clk,
     input rst,
-    input [DATA_IN:0] a,
-    input [DATA_IN:0] b,
-    output reg [DATA_IN:0] c
+    input [DATA_IN-1:0] a,
+    input [DATA_IN-1:0] b,
+    output reg [DATA_IN-1:0] c
 );
 
 

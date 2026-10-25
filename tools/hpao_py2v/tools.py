@@ -76,18 +76,18 @@ class HDLmodule:
                     if(signal.width == "0"):
                         f.write("    " + signal.kind + " " + signal.name + "\n")
                     else:
-                        f.write("    " + signal.kind + " " + "[" + signal.width + ":0] " + signal.name + "\n")
+                        f.write("    " + signal.kind + " " + "[" + signal.width + "-1:0] " + signal.name + "\n")
                 else:
                     if(signal.width == "0"):
                         f.write("    " + signal.kind + " " + signal.name + "," + "\n")
                     else:
-                        f.write("    " + signal.kind + " " + "[" + signal.width + ":0] " + signal.name + "," + "\n")
+                        f.write("    " + signal.kind + " " + "[" + signal.width + "-1:0] " + signal.name + "," + "\n")
             f.write(");\n\n")
             for signal in self.signals:
                 if(signal.width == "0"):
                     f.write("    " + signal.kind + " " + signal.name + ";" + "\n")
                 else:
-                    f.write("    " + signal.kind + " " + "[" + signal.width + ":0] " + signal.name + ";" + "\n")
+                    f.write("    " + signal.kind + " " + "[" + signal.width + "-1:0] " + signal.name + ";" + "\n")
             f.write("\n")
             for block in self.blocks:
                 for text in block.texts:
